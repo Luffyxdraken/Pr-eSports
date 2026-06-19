@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Login - Luffy 69 FF</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0f0f0f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.login-box{
+    background:#1b1b1b;
+    padding:30px;
+    border-radius:15px;
+    width:320px;
+    text-align:center;
+    box-shadow:0 0 20px rgba(255,153,0,0.3);
+}
+
+h1{
+    color:#ff9900;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#ff9900;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+a{
+    color:#ff9900;
+    text-decoration:none;
+}
+
+.message{
+    margin-top:15px;
+    color:#ccc;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <h1>⚓ Member Login</h1>
+
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+
+        <input type="password" id="password" placeholder="Password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="message">
+        Don't have an account?
+        <br><br>
+        <a href="register.html">Request Membership</a>
+    </div>
+
+    <br>
+    <a href="index.html">⬅ Back Home</a>
+
+</div>
+
+<script>
+document.getElementById("loginForm")
+.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    // Firebase login code will go here later
+
+    alert("Login system will be connected to Firebase.");
+});
+</script>
+
+</body>
+</html>
