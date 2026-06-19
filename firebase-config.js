@@ -8,12 +8,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 // Replace these values with your own Firebase project's config
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDpCqFgPRyyl_wEE9uNU50Ia9THW8ppq-k",
+  authDomain: "chat-bot-ed471.firebaseapp.com",
+  projectId: "chat-bot-ed471",
+  storageBucket: "chat-bot-ed471.firebasestorage.app",
+  messagingSenderId: "308395168793",
+  appId: "1:308395168793:web:2b92bae76d9b627daa0688",
+  measurementId: "G-N9YWE2NFY7"
 };
 
 // Initialize Firebase
