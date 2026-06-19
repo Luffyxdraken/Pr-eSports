@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luffy Admin Panel</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0f0f0f;
+    color:white;
+}
+
+.header{
+    background:#ff9900;
+    padding:20px;
+    text-align:center;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#1b1b1b;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+button{
+    background:#ff9900;
+    color:white;
+    border:none;
+    padding:12px;
+    margin-top:10px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.member{
+    background:#222;
+    padding:10px;
+    margin-top:10px;
+    border-radius:8px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>⚓ LUFFY 69 FF ADMIN PANEL</h1>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>🏆 Tournament Settings</h2>
+
+        <input type="date" id="date">
+
+        <input type="time" id="time">
+
+        <select id="map">
+            <option>Bermuda</option>
+            <option>Purgatory</option>
+            <option>Kalahari</option>
+            <option>Alpine</option>
+        </select>
+
+        <input type="text" id="roomid" placeholder="Room ID">
+
+        <input type="text" id="password" placeholder="Room Password">
+
+        <button onclick="saveTournament()">
+            Save Tournament
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>📢 Announcement</h2>
+
+        <textarea
+        id="announcement"
+        rows="4"
+        placeholder="Write announcement here...">
+        </textarea>
+
+        <button onclick="saveAnnouncement()">
+            Save Announcement
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>👥 Pending Members</h2>
+
+        <div class="member">
+            PlayerExample
+
+            <br><br>
+
+            <button>Approve</button>
+            <button>Reject</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🚫 Ban Member</h2>
+
+        <input
+        type="text"
+        id="banUser"
+        placeholder="Enter IGN">
+
+        <button onclick="banMember()">
+            Ban Player
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>🏅 Rankings</h2>
+
+        <input
+        type="text"
+        placeholder="Rank 1">
+
+        <input
+        type="text"
+        placeholder="Rank 2">
+
+        <input
+        type="text"
+        placeholder="Rank 3">
+
+        <button>
+            Save Rankings
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+function saveTournament(){
+
+const data={
+date:document.getElementById("date").value,
+time:document.getElementById("time").value,
+map:document.getElementById("map").value,
+roomid:document.getElementById("roomid").value,
+password:document.getElementById("password").value
+};
+
+console.log(data);
+
+/*
+Firebase save code here
+*/
+
+alert("Tournament Updated");
+
+}
+
+function saveAnnouncement(){
+
+const text=
+document.getElementById("announcement").value;
+
+console.log(text);
+
+/*
+Firebase save code here
+*/
+
+alert("Announcement Saved");
+
+}
+
+function banMember(){
+
+const user=
+document.getElementById("banUser").value;
+
+console.log(user);
+
+/*
+Firebase update code here
+*/
+
+alert(user + " has been banned");
+
+}
+
+</script>
+
+</body>
+</html>
