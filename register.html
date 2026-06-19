@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join Luffy 69 FF Guild</title>
+
+<style>
+body{
+    margin:0;
+    background:#0f0f0f;
+    color:white;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    background:#1b1b1b;
+    padding:30px;
+    width:350px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(255,153,0,0.3);
+}
+
+h1{
+    text-align:center;
+    color:#ff9900;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:none;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#ff9900;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.note{
+    margin-top:15px;
+    text-align:center;
+    color:#bbb;
+    font-size:14px;
+}
+
+a{
+    color:#ff9900;
+    text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚓ Join Luffy 69 FF</h1>
+
+<form id="joinForm">
+
+<input
+type="text"
+id="ign"
+placeholder="In-Game Name"
+required>
+
+<input
+type="email"
+id="email"
+placeholder="Email Address"
+required>
+
+<input
+type="password"
+id="password"
+placeholder="Create Password"
+required>
+
+<input
+type="text"
+id="uid"
+placeholder="Free Fire UID"
+required>
+
+<select id="server">
+<option value="">Select Server</option>
+<option>India</option>
+<option>Bangladesh</option>
+<option>Singapore</option>
+<option>Other</option>
+</select>
+
+<button type="submit">
+Submit Membership Request
+</button>
+
+</form>
+
+<div class="note">
+Your request will be reviewed by Luffy.
+<br><br>
+<a href="login.html">Already a member? Login</a>
+</div>
+
+</div>
+
+<script>
+document
+.getElementById("joinForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const memberData={
+ign:document.getElementById("ign").value,
+email:document.getElementById("email").value,
+uid:document.getElementById("uid").value,
+server:document.getElementById("server").value,
+status:"pending"
+};
+
+console.log(memberData);
+
+/*
+Firebase Firestore code
+will be added here later
+*/
+
+alert(
+"Membership request submitted successfully!"
+);
+
+this.reset();
+
+});
+</script>
+
+</body>
+</html>
