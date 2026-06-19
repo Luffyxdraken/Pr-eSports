@@ -245,6 +245,42 @@ Firebase Firestore Code
 will replace all sample data above.
 */
 
+<script>
+
+/*
+Load Rankings
+*/
+
+document.getElementById("rank1").innerText =
+"Luffy";
+
+document.getElementById("rank2").innerText =
+"Player 2";
+
+document.getElementById("rank3").innerText =
+"Player 3";
+
+
+// TOURNAMENT SLOTS
+
+const maxPlayers = 50;
+const joinedPlayers = 27;
+
+const remaining =
+maxPlayers - joinedPlayers;
+
+document.getElementById(
+"slots"
+).innerHTML =
+
+joinedPlayers +
+" / " +
+maxPlayers +
+" Players Joined<br><br>" +
+
+remaining +
+" Slots Remaining";
+
 </script>
 
 </body>
