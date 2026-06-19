@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Dashboard - Luffy 69 FF</title>
+
+<style>
+body{
+    margin:0;
+    background:#0f0f0f;
+    color:white;
+    font-family:Arial,sans-serif;
+}
+
+.header{
+    background:#ff9900;
+    text-align:center;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#1b1b1b;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.card h2{
+    color:#ff9900;
+}
+
+.room-box{
+    background:#222;
+    padding:15px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.rank{
+    background:#222;
+    padding:10px;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+.logout{
+    display:inline-block;
+    background:#ff9900;
+    color:white;
+    text-decoration:none;
+    padding:10px 15px;
+    border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>⚓ LUFFY 69 FF MEMBER DASHBOARD</h1>
+</div>
+
+<div class="container">
+
+    <div class="card">
+        <h2>👋 Welcome Member</h2>
+        <p id="memberName">Loading...</p>
+    </div>
+
+    <div class="card">
+        <h2>🏆 Tournament Information</h2>
+
+        <p><strong>Date:</strong> <span id="date">Loading...</span></p>
+
+        <p><strong>Time:</strong> <span id="time">Loading...</span></p>
+
+        <p><strong>Map:</strong> <span id="map">Loading...</span></p>
+    </div>
+
+    <div class="card">
+        <h2>🔐 Room Details</h2>
+
+        <div class="room-box">
+
+            <p>
+            <strong>Room ID:</strong>
+            <span id="roomid">Loading...</span>
+            </p>
+
+            <p>
+            <strong>Password:</strong>
+            <span id="password">Loading...</span>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📢 Announcement</h2>
+
+        <p id="announcement">
+            Loading...
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>🏅 Guild Rankings</h2>
+
+        <div class="rank">
+            🥇 <span id="rank1">Loading...</span>
+        </div>
+
+        <div class="rank">
+            🥈 <span id="rank2">Loading...</span>
+        </div>
+
+        <div class="rank">
+            🥉 <span id="rank3">Loading...</span>
+        </div>
+    </div>
+
+    <a href="login.html" class="logout">
+        Logout
+    </a>
+
+</div>
+
+<script>
+
+/*
+Firebase Authentication Check
+
+If member is not logged in:
+redirect to login.html
+*/
+
+/*
+Load Tournament Data
+*/
+
+document.getElementById("date").innerText =
+"25 June 2026";
+
+document.getElementById("time").innerText =
+"8:00 PM";
+
+document.getElementById("map").innerText =
+"Bermuda";
+
+document.getElementById("roomid").innerText =
+"123456789";
+
+document.getElementById("password").innerText =
+"LUFFY69";
+
+/*
+Load Announcement
+*/
+
+document.getElementById("announcement").innerText =
+"Welcome to the weekly guild tournament!";
+
+/*
+Load Rankings
+*/
+
+document.getElementById("rank1").innerText =
+"Luffy";
+
+document.getElementById("rank2").innerText =
+"Player 2";
+
+document.getElementById("rank3").innerText =
+"Player 3";
+
+/*
+Firebase Firestore Code
+will replace all sample data above.
+*/
+
+</script>
+
+</body>
+</html>
