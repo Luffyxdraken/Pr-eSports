@@ -3,196 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PR eSports Member Login</title>
+<title>PR eSports Member Dashboard</title>
 
 <style>
-
 body{
-    margin:0;
-    padding:0;
-    font-family:Arial,sans-serif;
-    background:#0f0f0f;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f0f0f;
+color:white;
 }
 
-.login-box{
-    background:#1b1b1b;
-    width:350px;
-    padding:30px;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 0 15px rgba(255,153,0,0.3);
+.header{
+background:#ff9900;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
 }
 
-.logo{
-    font-size:30px;
-    margin-bottom:10px;
+.container{
+max-width:1000px;
+margin:auto;
+padding:20px;
 }
 
-h1{
-    color:#ff9900;
-    margin-bottom:20px;
+.card{
+background:#1b1b1b;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
 }
 
-input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:none;
-    border-radius:8px;
-    box-sizing:border-box;
+h2{
+color:#ff9900;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:8px;
-    background:#ff9900;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
+background:#ff9900;
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
 }
 
-button:hover{
-    opacity:0.9;
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+box-sizing:border-box;
 }
 
-a{
-    color:#ff9900;
-    text-decoration:none;
+#chatBox{
+height:300px;
+overflow-y:auto;
+background:#111;
+padding:10px;
+border-radius:10px;
 }
 
-.note{
-    margin-top:15px;
-    font-size:14px;
-    color:#ccc;
+.chat-message{
+background:#222;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
 }
-
 </style>
 </head>
-
 <body>
 
-<div class="login-box">
+<div class="header">
+⚓ PR eSports Member Dashboard
+</div>
 
-<div class="logo">⚓</div>
+<div class="container">
 
-<h1>PR eSports Login</h1>
+<div class="card">
+<h2>👋 Welcome</h2>
+<p id="playerName">Loading...</p>
+</div>
 
-<form id="loginForm">
+<div class="card">
+<h2>🏆 Tournament Information</h2>
+
+<p>📅 Date: <span id="tourDate">Loading...</span></p>
+<p>🕒 Time: <span id="tourTime">Loading...</span></p>
+<p>🗺️ Map: <span id="tourMap">Loading...</span></p>
+
+</div>
+
+<div class="card">
+<h2>🔑 Room Information</h2>
+
+<p>Room ID: <span id="roomId">Loading...</span></p>
+
+<p>Password: <span id="roomPass">Loading...</span></p>
+
+</div>
+
+<div class="card">
+<h2>📢 Announcement</h2>
+
+<p id="announcement">
+Loading...
+</p>
+
+</div>
+
+<div class="card">
+<h2>🏅 Rankings</h2>
+
+<p id="rank1">🥇 Loading...</p>
+<p id="rank2">🥈 Loading...</p>
+<p id="rank3">🥉 Loading...</p>
+
+</div>
+
+<div class="card">
+
+<h2>💬 Guild Chat</h2>
+
+<div id="chatBox"></div>
 
 <input
 type="text"
-id="ign"
-placeholder="Enter In-Game Name"
-required>
-
-<input
-type="password"
-id="password"
-placeholder="Enter Password"
-required>
-
-<button type="submit">
-Login
-</button>
-
-</form>
-
-<button onclick="location.href='register.html'">
-Create Account
-</button>
-
-<div class="note">
-
-<a href="index.html">
-⬅ Back To Home
-</a>
+id="chatInput"
+placeholder="Type message">
 
 <br><br>
 
-<a href="#" onclick="openAdmin()">
-👑 Admin Panel
+<button id="sendChat">
+Send Message
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>📺 Official Channel</h2>
+
+<a
+href="https://youtube.com/@luffy_69_ff?si=y2LNFTbWlxPmcPLS"
+target="_blank">
+
+<button>
+Subscribe To Luffy 69 FF
+</button>
+
 </a>
 
 </div>
 
+<div class="card">
+
+<button id="logoutBtn">
+Logout
+</button>
+
 </div>
 
-<script>
+</div>
 
-// MEMBER LOGIN
+<script type="module">
 
-document
-.getElementById("loginForm")
-.addEventListener("submit",function(e){
-
-e.preventDefault();
-
-const ign =
-document.getElementById("ign").value;
-
-const password =
-document.getElementById("password").value;
-
-const savedIGN =
-localStorage.getItem("memberIGN");
-
-const savedPassword =
-localStorage.getItem("memberPassword");
-
-if(
-ign === savedIGN &&
-password === savedPassword
-){
-
-localStorage.setItem(
-"loggedIn",
-"true"
-);
-
-window.location.href =
-"member.html";
-
-}else{
-
-alert(
-"Invalid IGN or Password"
-);
-
+import {
+logoutMember,
+getCurrentUser,
+requireMember
 }
+from "./auth.js";
+
+import {
+sendMessage,
+loadChat
+}
+from "./chat.js";
+
+import { db }
+from "./firebase-config.js";
+
+import {
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+requireMember();
+
+let currentUser = null;
+
+/* USER INFO */
+
+getCurrentUser(async(user)=>{
+
+if(!user) return;
+
+currentUser = user;
+
+document.getElementById(
+"playerName"
+).innerText =
+"Welcome " + user.ign;
 
 });
 
-// ADMIN ACCESS
+/* LOAD TOURNAMENT */
 
-function openAdmin(){
+async function loadTournament(){
 
-const pass =
-prompt(
-"Enter Admin Password"
+const snap =
+await getDoc(
+doc(db,"tournament","current")
 );
 
-if(pass === "735208"){
+if(!snap.exists()) return;
 
-window.location.href =
-"admin.html";
+const data =
+snap.data();
 
-}else{
+document.getElementById(
+"tourDate"
+).innerText =
+data.date || "Not Set";
 
-alert(
-"Wrong Password"
-);
+document.getElementById(
+"tourTime"
+).innerText =
+data.time || "Not Set";
+
+document.getElementById(
+"tourMap"
+).innerText =
+data.map || "Not Set";
+
+document.getElementById(
+"roomId"
+).innerText =
+data.roomid || "Not Released";
+
+document.getElementById(
+"roomPass"
+).innerText =
+data.roompass || "Not Released";
 
 }
 
+/* LOAD ANNOUNCEMENT */
+
+async function loadAnnouncement(){
+
+const snap =
+await getDoc(
+doc(db,"announcements","main")
+);
+
+if(!snap.exists()) return;
+
+const data =
+snap.data();
+
+document.getElementById(
+"announcement"
+).innerText =
+data.text || "No Announcement";
+
 }
+
+/* LOAD RANKINGS */
+
+async function loadRankings(){
+
+const snap =
+await getDoc(
+doc(db,"rankings","main")
+);
+
+if(!snap.exists()) return;
+
+const data =
+snap.data();
+
+document.getElementById(
+"rank1"
+).innerText =
+"🥇 " + (data.rank1 || "Empty");
+
+document.getElementById(
+"rank2"
+).innerText =
+"🥈 " + (data.rank2 || "Empty");
+
+document.getElementById(
+"rank3"
+).innerText =
+"🥉 " + (data.rank3 || "Empty");
+
+}
+
+loadTournament();
+loadAnnouncement();
+loadRankings();
+
+/* CHAT */
+
+loadChat("chatBox");
+
+document
+.getElementById("sendChat")
+.addEventListener("click",()=>{
+
+const msg =
+document.getElementById(
+"chatInput"
+).value;
+
+if(!msg || !currentUser) return;
+
+sendMessage(
+currentUser.ign,
+msg
+);
+
+document.getElementById(
+"chatInput"
+).value = "";
+
+});
+
+/* LOGOUT */
+
+document
+.getElementById("logoutBtn")
+.addEventListener("click",()=>{
+
+logoutMember();
+
+});
 
 </script>
 
