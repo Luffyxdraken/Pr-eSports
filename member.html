@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Luffy 69 FF - Member Area</title>
+<title>PR eSports Member Area</title>
 
 <style>
 
@@ -23,7 +23,7 @@ body{
 }
 
 .container{
-    max-width:1000px;
+    max-width:900px;
     margin:auto;
     padding:20px;
 }
@@ -57,109 +57,71 @@ button:hover{
     opacity:0.9;
 }
 
-.rank{
-    background:#222;
-    padding:10px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
 </style>
 </head>
 <body>
 
 <div class="header">
-⚓ Luffy 69 FF Member Area
+⚓ PR eSports Member Area
 </div>
 
 <div class="container">
 
 <div class="card">
 <h2>👋 Welcome</h2>
-<div id="playerName" class="info"></div>
+<p id="welcomeText"></p>
 </div>
 
 <div class="card">
-<h2>⏳ Tournament Countdown</h2>
-<h1 id="countdown">Loading...</h1>
-</div>
-
-<div class="card">
-<h2>🏆 Tournament Details</h2>
+<h2>🏆 Tournament Information</h2>
 
 <div class="info">
-📅 Date: <span id="date">Not Set</span>
+📅 Date: Coming Soon
 </div>
 
 <div class="info">
-🕒 Time: <span id="time">Not Set</span>
+🕒 Time: Coming Soon
 </div>
 
 <div class="info">
-🗺️ Map: <span id="map">Not Set</span>
+🗺️ Map: Bermuda
 </div>
 
 <div class="info">
-🎮 Room ID: <span id="roomid">Not Set</span>
+🎮 Room ID: Hidden Until Tournament
 </div>
 
 <div class="info">
-🔑 Password: <span id="roompassword">Not Set</span>
+🔑 Password: Hidden Until Tournament
 </div>
 
 </div>
 
 <div class="card">
 <h2>📢 Announcement</h2>
-<p id="announcement">
-No Announcement Yet
-</p>
-</div>
-
-<div class="card">
-<h2>🏅 Guild Rankings</h2>
-
-<div class="rank">
-🥇 <span id="rank1">Empty</span>
-</div>
-
-<div class="rank">
-🥈 <span id="rank2">Empty</span>
-</div>
-
-<div class="rank">
-🥉 <span id="rank3">Empty</span>
-</div>
-
-</div>
-
-<div class="card">
-<h2>🎮 Tournament Slots</h2>
-<h3 id="slots">Loading...</h3>
-</div>
-
-<div class="card">
-<h2>📞 Helpline</h2>
 
 <p>
-Need help?
-Contact Admin:
-</p>
-
-<p>
-Discord: Luffy69FF
-</p>
-
-<p>
-Instagram: @luffy69ff
+Welcome to PR eSports.
+Stay active and prepare for upcoming tournaments.
 </p>
 
 </div>
 
 <div class="card">
+<h2>🏅 Top Players</h2>
+
+<p>🥇 Rank 1</p>
+<p>🥈 Rank 2</p>
+<p>🥉 Rank 3</p>
+
+</div>
+
+<div class="card">
+
 <button onclick="logout()">
 Logout
 </button>
+
 </div>
 
 </div>
@@ -169,124 +131,20 @@ Logout
 // LOGIN CHECK
 
 if(localStorage.getItem("loggedIn") !== "true"){
+
 window.location.href = "login.html";
-}
-
-// PLAYER NAME
-
-document.getElementById(
-"playerName"
-).innerHTML =
-"Welcome, " +
-(localStorage.getItem("memberIGN") || "Player");
-
-// LOAD TOURNAMENT
-
-const tournament =
-JSON.parse(
-localStorage.getItem(
-"tournamentData"
-)
-);
-
-if(tournament){
-
-document.getElementById("date").innerText =
-tournament.date || "Not Set";
-
-document.getElementById("time").innerText =
-tournament.time || "Not Set";
-
-document.getElementById("map").innerText =
-tournament.map || "Not Set";
-
-document.getElementById("roomid").innerText =
-tournament.roomid || "Not Set";
-
-document.getElementById("roompassword").innerText =
-tournament.roompassword || "Not Set";
 
 }
 
-// LOAD ANNOUNCEMENT
+// SHOW PLAYER NAME
+
+const playerName =
+localStorage.getItem("memberIGN");
 
 document.getElementById(
-"announcement"
-).innerText =
-localStorage.getItem(
-"announcement"
-) || "No Announcement Yet";
-
-// LOAD RANKINGS
-
-const rankings =
-JSON.parse(
-localStorage.getItem(
-"rankings"
-)
-);
-
-if(rankings){
-
-document.getElementById("rank1").innerText =
-rankings.rank1 || "Empty";
-
-document.getElementById("rank2").innerText =
-rankings.rank2 || "Empty";
-
-document.getElementById("rank3").innerText =
-rankings.rank3 || "Empty";
-
-}
-
-// TOURNAMENT SLOTS
-
-const maxPlayers = 50;
-const joinedPlayers = 12;
-
-document.getElementById(
-"slots"
+"welcomeText"
 ).innerHTML =
-joinedPlayers +
-" / " +
-maxPlayers +
-" Players Joined";
-
-// COUNTDOWN
-
-const tournamentDate =
-new Date("2026-07-01T20:00:00").getTime();
-
-setInterval(function(){
-
-const now =
-new Date().getTime();
-
-const distance =
-tournamentDate - now;
-
-const days =
-Math.floor(distance/(1000*60*60*24));
-
-const hours =
-Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-
-const minutes =
-Math.floor((distance%(1000*60*60))/(1000*60));
-
-const seconds =
-Math.floor((distance%(1000*60))/1000);
-
-document.getElementById(
-"countdown"
-).innerHTML =
-
-days+"d "+
-hours+"h "+
-minutes+"m "+
-seconds+"s";
-
-},1000);
+"Welcome, " + playerName + "!";
 
 // LOGOUT
 
