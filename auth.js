@@ -11,25 +11,18 @@ import {
 doc,
 setDoc,
 getDoc,
-updateDoc,
-serverTimestamp
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* --------------------------
-   ADMIN CONFIG
---------------------------- */
-
-const ADMIN_EMAIL = "luffy@world.com";
-
-/* --------------------------
-   REGISTER
---------------------------- */
+/* =========================
+   REGISTER MEMBER
+========================= */
 
 export async function registerMember(
 email,
 password,
 ign,
-region = "Unknown"
+region
 ){
 
 try{
@@ -41,7 +34,14 @@ email,
 password
 );
 
-const user = userCredential.user;
+const user =
+userCredential.user;
+
+let role = "member";
+
+if(email === "luffy@world.com"){
+role = "admin";
+}
 
 await setDoc(
 doc(db,"users",user.uid),
@@ -50,24 +50,31 @@ uid:user.uid,
 email:email,
 ign:ign,
 region:region,
-role:
-email === ADMIN_EMAIL
-? "admin"
-: "member",
-
+role:role,
 banned:false,
-
-createdAt:
-serverTimestamp()
+createdAt:new Date().toISOString()
 }
 );
 
-alert("Account created successfully!");
+alert("Account Created Successfully");
 
 window.location.href =
-"login.html";
+"member.html";
 
-}catch(error){
+}
+catch(error){
+
+if(
+error.code ===
+"auth/email-already-in-use"
+){
+
+alert(
+"Email already registered. Please Login."
+);
+
+}
+else{
 
 alert(error.message);
 
@@ -75,9 +82,11 @@ alert(error.message);
 
 }
 
-/* --------------------------
-   LOGIN
---------------------------- */
+}
+
+/* =========================
+   LOGIN MEMBER
+========================= */
 
 export async function loginMember(
 email,
@@ -103,7 +112,7 @@ doc(db,"users",user.uid)
 
 if(!userDoc.exists()){
 
-alert("Profile not found");
+alert("User profile not found");
 
 return;
 
@@ -114,7 +123,9 @@ userDoc.data();
 
 if(data.banned){
 
-alert("You are banned.");
+alert(
+"Your account has been banned."
+);
 
 await signOut(auth);
 
@@ -127,14 +138,28 @@ if(data.role === "admin"){
 window.location.href =
 "admin.html";
 
-}else{
+}
+else{
 
 window.location.href =
 "member.html";
 
 }
 
-}catch(error){
+}
+catch(error){
+
+if(
+error.code ===
+"auth/invalid-credential"
+){
+
+alert(
+"Wrong Email or Password"
+);
+
+}
+else{
 
 alert(error.message);
 
@@ -142,32 +167,28 @@ alert(error.message);
 
 }
 
-/* --------------------------
+}
+
+/* =========================
    LOGOUT
---------------------------- */
+========================= */
 
 export async function logoutMember(){
-
-try{
 
 await signOut(auth);
 
 window.location.href =
 "login.html";
 
-}catch(error){
-
-alert(error.message);
-
 }
 
-}
+/* =========================
+   CURRENT USER
+========================= */
 
-/* --------------------------
-   GET CURRENT USER
---------------------------- */
-
-export function getCurrentUser(callback){
+export function getCurrentUser(
+callback
+){
 
 onAuthStateChanged(
 auth,
@@ -176,6 +197,7 @@ async(user)=>{
 if(!user){
 
 callback(null);
+
 return;
 
 }
@@ -187,23 +209,47 @@ doc(db,"users",user.uid)
 
 if(userDoc.exists()){
 
-callback({
-uid:user.uid,
-...userDoc.data()
-});
+callback(
+userDoc.data()
+);
 
-}else{
+}
+else{
 
 callback(null);
 
 }
 
-});
+}
+);
+
 }
 
-/* --------------------------
-   ADMIN CHECK
---------------------------- */
+/* =========================
+   REQUIRE LOGIN
+========================= */
+
+export function requireMember(){
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+}
+
+}
+);
+
+}
+
+/* =========================
+   REQUIRE ADMIN
+========================= */
 
 export function requireAdmin(){
 
@@ -244,61 +290,18 @@ window.location.href =
 
 }
 
-});
-}
-
-/* --------------------------
-   MEMBER CHECK
---------------------------- */
-
-export function requireMember(){
-
-onAuthStateChanged(
-auth,
-(user)=>{
-
-if(!user){
-
-window.location.href =
-"login.html";
-
-}
-
-});
-}
-
-/* --------------------------
-   PROMOTE TO ADMIN
---------------------------- */
-
-export async function makeAdmin(uid){
-
-try{
-
-await updateDoc(
-doc(db,"users",uid),
-{
-role:"admin"
 }
 );
 
-alert("User promoted to admin");
-
-}catch(error){
-
-alert(error.message);
-
 }
 
-}
-
-/* --------------------------
+/* =========================
    BAN MEMBER
---------------------------- */
+========================= */
 
-export async function banMember(uid){
-
-try{
+export async function banMember(
+uid
+){
 
 await updateDoc(
 doc(db,"users",uid),
@@ -307,23 +310,17 @@ banned:true
 }
 );
 
-alert("Member banned");
-
-}catch(error){
-
-alert(error.message);
+alert("Member Banned");
 
 }
 
-}
-
-/* --------------------------
+/* =========================
    UNBAN MEMBER
---------------------------- */
+========================= */
 
-export async function unbanMember(uid){
-
-try{
+export async function unbanMember(
+uid
+){
 
 await updateDoc(
 doc(db,"users",uid),
@@ -332,12 +329,27 @@ banned:false
 }
 );
 
-alert("Member unbanned");
-
-}catch(error){
-
-alert(error.message);
+alert("Member Unbanned");
 
 }
+
+/* =========================
+   MAKE ADMIN
+========================= */
+
+export async function makeAdmin(
+uid
+){
+
+await updateDoc(
+doc(db,"users",uid),
+{
+role:"admin"
+}
+);
+
+alert(
+"User Promoted To Admin"
+);
 
 }
