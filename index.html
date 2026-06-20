@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PR eSports Member Dashboard</title>
+<title>PR eSports Dashboard</title>
 
 <style>
 body{
@@ -36,6 +36,7 @@ margin-bottom:20px;
 
 h2{
 color:#ff9900;
+margin-top:0;
 }
 
 button{
@@ -50,24 +51,24 @@ cursor:pointer;
 input{
 width:100%;
 padding:12px;
-margin-top:10px;
 border:none;
 border-radius:8px;
 box-sizing:border-box;
 }
 
 #chatBox{
-height:300px;
+height:250px;
 overflow-y:auto;
 background:#111;
 padding:10px;
 border-radius:10px;
+margin-bottom:10px;
 }
 
-.chat-message{
+.message{
 background:#222;
-padding:10px;
-margin-bottom:10px;
+padding:8px;
+margin-bottom:8px;
 border-radius:8px;
 }
 </style>
@@ -75,7 +76,7 @@ border-radius:8px;
 <body>
 
 <div class="header">
-⚓ PR eSports Member Dashboard
+⚓ PR eSports Dashboard
 </div>
 
 <div class="container">
@@ -86,43 +87,31 @@ border-radius:8px;
 </div>
 
 <div class="card">
-<h2>🏆 Tournament Information</h2>
-
-<p>📅 Date: <span id="tourDate">Loading...</span></p>
-<p>🕒 Time: <span id="tourTime">Loading...</span></p>
-<p>🗺️ Map: <span id="tourMap">Loading...</span></p>
-
+<h2>🏆 Tournament</h2>
+<p>Date: <span id="tourDate">Not Set</span></p>
+<p>Time: <span id="tourTime">Not Set</span></p>
+<p>Map: <span id="tourMap">Not Set</span></p>
 </div>
 
 <div class="card">
-<h2>🔑 Room Information</h2>
-
-<p>Room ID: <span id="roomId">Loading...</span></p>
-
-<p>Password: <span id="roomPass">Loading...</span></p>
-
+<h2>🔑 Room Details</h2>
+<p>Room ID: <span id="roomId">Not Released</span></p>
+<p>Password: <span id="roomPass">Not Released</span></p>
 </div>
 
 <div class="card">
 <h2>📢 Announcement</h2>
-
-<p id="announcement">
-Loading...
-</p>
-
+<p id="announcement">No Announcement</p>
 </div>
 
 <div class="card">
 <h2>🏅 Rankings</h2>
-
-<p id="rank1">🥇 Loading...</p>
-<p id="rank2">🥈 Loading...</p>
-<p id="rank3">🥉 Loading...</p>
-
+<p id="rank1">🥇 Empty</p>
+<p id="rank2">🥈 Empty</p>
+<p id="rank3">🥉 Empty</p>
 </div>
 
 <div class="card">
-
 <h2>💬 Guild Chat</h2>
 
 <div id="chatBox"></div>
@@ -134,34 +123,27 @@ placeholder="Type message">
 
 <br><br>
 
-<button id="sendChat">
-Send Message
+<button id="sendBtn">
+Send
 </button>
 
 </div>
 
 <div class="card">
+<h2>📺 YouTube</h2>
 
-<h2>📺 Official Channel</h2>
-
-<a
-href="https://youtube.com/@luffy_69_ff?si=y2LNFTbWlxPmcPLS"
-target="_blank">
-
+<a href="https://youtube.com/@luffy_69_ff?si=y2LNFTbWlxPmcPLS" target="_blank">
 <button>
 Subscribe To Luffy 69 FF
 </button>
-
 </a>
 
 </div>
 
 <div class="card">
-
 <button id="logoutBtn">
 Logout
 </button>
-
 </div>
 
 </div>
@@ -169,24 +151,24 @@ Logout
 <script type="module">
 
 import {
+db
+} from "./firebase-config.js";
+
+import {
 logoutMember,
-getCurrentUser,
-requireMember
-}
-from "./auth.js";
+requireMember,
+getCurrentUser
+} from "./auth.js";
 
 import {
-sendMessage,
-loadChat
-}
-from "./chat.js";
-
-import { db }
-from "./firebase-config.js";
-
-import {
+collection,
+addDoc,
+orderBy,
+query,
+onSnapshot,
 doc,
-getDoc
+getDoc,
+serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -194,9 +176,9 @@ requireMember();
 
 let currentUser = null;
 
-/* USER INFO */
+/* USER */
 
-getCurrentUser(async(user)=>{
+getCurrentUser((user)=>{
 
 if(!user) return;
 
@@ -209,9 +191,11 @@ document.getElementById(
 
 });
 
-/* LOAD TOURNAMENT */
+/* TOURNAMENT */
 
 async function loadTournament(){
+
+try{
 
 const snap =
 await getDoc(
@@ -220,39 +204,34 @@ doc(db,"tournament","current")
 
 if(!snap.exists()) return;
 
-const data =
-snap.data();
+const data = snap.data();
 
-document.getElementById(
-"tourDate"
-).innerText =
+document.getElementById("tourDate").innerText =
 data.date || "Not Set";
 
-document.getElementById(
-"tourTime"
-).innerText =
+document.getElementById("tourTime").innerText =
 data.time || "Not Set";
 
-document.getElementById(
-"tourMap"
-).innerText =
+document.getElementById("tourMap").innerText =
 data.map || "Not Set";
 
-document.getElementById(
-"roomId"
-).innerText =
+document.getElementById("roomId").innerText =
 data.roomid || "Not Released";
 
-document.getElementById(
-"roomPass"
-).innerText =
+document.getElementById("roomPass").innerText =
 data.roompass || "Not Released";
+
+}catch(err){
+console.log(err);
+}
 
 }
 
-/* LOAD ANNOUNCEMENT */
+/* ANNOUNCEMENT */
 
 async function loadAnnouncement(){
+
+try{
 
 const snap =
 await getDoc(
@@ -261,19 +240,22 @@ doc(db,"announcements","main")
 
 if(!snap.exists()) return;
 
-const data =
-snap.data();
-
 document.getElementById(
 "announcement"
 ).innerText =
-data.text || "No Announcement";
+snap.data().text || "No Announcement";
+
+}catch(err){
+console.log(err);
+}
 
 }
 
-/* LOAD RANKINGS */
+/* RANKINGS */
 
 async function loadRankings(){
+
+try{
 
 const snap =
 await getDoc(
@@ -282,23 +264,20 @@ doc(db,"rankings","main")
 
 if(!snap.exists()) return;
 
-const data =
-snap.data();
+const data = snap.data();
 
-document.getElementById(
-"rank1"
-).innerText =
+document.getElementById("rank1").innerText =
 "🥇 " + (data.rank1 || "Empty");
 
-document.getElementById(
-"rank2"
-).innerText =
+document.getElementById("rank2").innerText =
 "🥈 " + (data.rank2 || "Empty");
 
-document.getElementById(
-"rank3"
-).innerText =
+document.getElementById("rank3").innerText =
 "🥉 " + (data.rank3 || "Empty");
+
+}catch(err){
+console.log(err);
+}
 
 }
 
@@ -308,11 +287,41 @@ loadRankings();
 
 /* CHAT */
 
-loadChat("chatBox");
+const chatBox =
+document.getElementById("chatBox");
+
+const q =
+query(
+collection(db,"guildChat"),
+orderBy("time","asc")
+);
+
+onSnapshot(q,(snapshot)=>{
+
+chatBox.innerHTML="";
+
+snapshot.forEach((doc)=>{
+
+const data = doc.data();
+
+chatBox.innerHTML += `
+<div class="message">
+<b>${data.player}</b><br>
+${data.message}
+</div>
+`;
+
+});
+
+chatBox.scrollTop =
+chatBox.scrollHeight;
+
+});
 
 document
-.getElementById("sendChat")
-.addEventListener("click",()=>{
+.getElementById("sendBtn")
+.addEventListener("click",
+async ()=>{
 
 const msg =
 document.getElementById(
@@ -321,14 +330,18 @@ document.getElementById(
 
 if(!msg || !currentUser) return;
 
-sendMessage(
-currentUser.ign,
-msg
+await addDoc(
+collection(db,"guildChat"),
+{
+player:currentUser.ign,
+message:msg,
+time:serverTimestamp()
+}
 );
 
 document.getElementById(
 "chatInput"
-).value = "";
+).value="";
 
 });
 
