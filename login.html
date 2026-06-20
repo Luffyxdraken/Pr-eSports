@@ -3,31 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Member Login - Luffy 69 FF</title>
+<title>PR eSports Login</title>
 
 <style>
+
 body{
     margin:0;
-    font-family:Arial,sans-serif;
+    padding:0;
     background:#0f0f0f;
     color:white;
+    font-family:Arial,sans-serif;
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
+    min-height:100vh;
 }
 
 .login-box{
+    width:350px;
     background:#1b1b1b;
     padding:30px;
     border-radius:15px;
-    width:320px;
     text-align:center;
-    box-shadow:0 0 20px rgba(255,153,0,0.3);
+    box-shadow:0 0 15px rgba(255,153,0,0.3);
 }
 
 h1{
     color:#ff9900;
+    margin-bottom:20px;
 }
 
 input{
@@ -42,10 +45,11 @@ input{
 button{
     width:100%;
     padding:12px;
-    border:none;
-    border-radius:8px;
+    margin-top:10px;
     background:#ff9900;
     color:white;
+    border:none;
+    border-radius:8px;
     font-weight:bold;
     cursor:pointer;
 }
@@ -59,10 +63,6 @@ a{
     text-decoration:none;
 }
 
-.message{
-    margin-top:15px;
-    color:#ccc;
-}
 </style>
 </head>
 
@@ -70,39 +70,82 @@ a{
 
 <div class="login-box">
 
-    <h1>⚓ Member Login</h1>
+<h1>⚓ PR eSports Login</h1>
 
-    <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required>
+<form id="loginForm">
 
-        <input type="password" id="password" placeholder="Password" required>
+<input
+type="text"
+id="ign"
+placeholder="Enter In-Game Name"
+required>
 
-        <button type="submit">Login</button>
-    </form>
+<input
+type="password"
+id="password"
+placeholder="Enter Password"
+required>
 
-    <div class="message">
-        Don't have an account?
-        <br><br>
-        <a href="register.html">Request Membership</a>
-    </div>
+<button type="submit">
+Login
+</button>
 
-    <br>
-    <a href="index.html">⬅ Back Home</a>
+</form>
+
+<br>
+
+<a href="register.html">
+Create Account
+</a>
+
+<br><br>
+
+<a href="index.html">
+⬅ Back Home
+</a>
 
 </div>
 
 <script>
+
 document.getElementById("loginForm")
-.addEventListener("submit", function(e){
+.addEventListener("submit",function(e){
 
-    e.preventDefault();
+e.preventDefault();
 
-    const email =
-        document.getElementById("email").value;
+const ign =
+document.getElementById("ign").value;
 
-    const password =
-        document.getElementById("password").value;
+const password =
+document.getElementById("password").value;
+
+const savedIGN =
+localStorage.getItem("memberIGN");
+
+const savedPassword =
+localStorage.getItem("memberPassword");
+
+if(
+ign === savedIGN &&
+password === savedPassword
+){
+
+localStorage.setItem(
+"loggedIn",
+"true"
+);
+
+window.location.href =
+"member.html";
+
+}else{
+
+alert("Wrong IGN or Password");
+
+}
+
 });
+
 </script>
 
 </body>
