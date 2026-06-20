@@ -3,58 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PR eSports Member Area</title>
+<title>PR eSports Member Dashboard</title>
 
 <style>
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#0f0f0f;
-    color:white;
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f0f0f;
+color:white;
 }
 
 .header{
-    background:#ff9900;
-    padding:20px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
+background:#ff9900;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
 }
 
 .container{
-    max-width:900px;
-    margin:auto;
-    padding:20px;
+max-width:1000px;
+margin:auto;
+padding:20px;
 }
 
 .card{
-    background:#1b1b1b;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
+background:#1b1b1b;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
 }
 
 h2{
-    color:#ff9900;
-}
-
-.info{
-    font-size:18px;
-    margin-top:10px;
+color:#ff9900;
 }
 
 button{
-    background:#ff9900;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    border-radius:8px;
-    cursor:pointer;
+background:#ff9900;
+color:white;
+border:none;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
 }
 
-button:hover{
-    opacity:0.9;
+a{
+color:white;
+text-decoration:none;
 }
 
 </style>
@@ -62,47 +58,66 @@ button:hover{
 <body>
 
 <div class="header">
-⚓ PR eSports Member Area
+⚓ PR eSports Member Dashboard
 </div>
 
 <div class="container">
 
 <div class="card">
 <h2>👋 Welcome</h2>
-<p id="welcomeText"></p>
+<p id="playerName">Loading...</p>
 </div>
 
 <div class="card">
 <h2>🏆 Tournament Information</h2>
 
-<div class="info">
-📅 Date: Coming Soon
+<p>
+📅 Date:
+<span id="tourDate">
+Coming Soon
+</span>
+</p>
+
+<p>
+🕒 Time:
+<span id="tourTime">
+Coming Soon
+</span>
+</p>
+
+<p>
+🗺️ Map:
+<span id="tourMap">
+Coming Soon
+</span>
+</p>
+
 </div>
 
-<div class="info">
-🕒 Time: Coming Soon
-</div>
+<div class="card">
+<h2>🔑 Room Information</h2>
 
-<div class="info">
-🗺️ Map: Bermuda
-</div>
+<p>
+Room ID:
+<span id="roomId">
+Not Released
+</span>
+</p>
 
-<div class="info">
-🎮 Room ID: Hidden Until Tournament
-</div>
-
-<div class="info">
-🔑 Password: Hidden Until Tournament
-</div>
+<p>
+Password:
+<span id="roomPass">
+Not Released
+</span>
+</p>
 
 </div>
 
 <div class="card">
 <h2>📢 Announcement</h2>
 
-<p>
-Welcome to PR eSports.
-Stay active and prepare for upcoming tournaments.
+<p id="announcement">
+No Announcement
 </p>
 
 </div>
@@ -110,15 +125,30 @@ Stay active and prepare for upcoming tournaments.
 <div class="card">
 <h2>🏅 Top Players</h2>
 
-<p>🥇 Rank 1</p>
-<p>🥈 Rank 2</p>
-<p>🥉 Rank 3</p>
+<p id="rank1">🥇 Empty</p>
+<p id="rank2">🥈 Empty</p>
+<p id="rank3">🥉 Empty</p>
+
+</div>
+
+<div class="card">
+<h2>📺 Official Channel</h2>
+
+<a
+href="https://youtube.com/@luffy_69_ff?si=y2LNFTbWlxPmcPLS"
+target="_blank">
+
+<button>
+Subscribe To Luffy 69 FF
+</button>
+
+</a>
 
 </div>
 
 <div class="card">
 
-<button onclick="logout()">
+<button id="logoutBtn">
 Logout
 </button>
 
@@ -126,38 +156,35 @@ Logout
 
 </div>
 
-<script>
+<script type="module">
 
-// LOGIN CHECK
-
-if(localStorage.getItem("loggedIn") !== "true"){
-
-window.location.href = "login.html";
-
+import {
+logoutMember,
+getCurrentUser,
+requireMember
 }
+from "./auth.js";
 
-// SHOW PLAYER NAME
+requireMember();
 
-const playerName =
-localStorage.getItem("memberIGN");
+getCurrentUser((user)=>{
+
+if(!user) return;
 
 document.getElementById(
-"welcomeText"
-).innerHTML =
-"Welcome, " + playerName + "!";
+"playerName"
+).innerText =
+user.ign;
 
-// LOGOUT
+});
 
-function logout(){
+document
+.getElementById("logoutBtn")
+.addEventListener("click",()=>{
 
-localStorage.removeItem(
-"loggedIn"
-);
+logoutMember();
 
-window.location.href =
-"login.html";
-
-}
+});
 
 </script>
 
