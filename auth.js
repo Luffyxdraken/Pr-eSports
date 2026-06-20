@@ -1,110 +1,343 @@
-// auth.js
-
-import { auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+signOut,
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-/* ==========================
-   REGISTER MEMBER
-========================== */
+import {
+doc,
+setDoc,
+getDoc,
+updateDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-window.registerMember = async function (
-  email,
-  password
-) {
-  try {
+/* --------------------------
+   ADMIN CONFIG
+--------------------------- */
 
-    const userCredential =
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+const ADMIN_EMAIL = "luffy@world.com";
 
-    alert("Registration Successful");
+/* --------------------------
+   REGISTER
+--------------------------- */
 
-    console.log(userCredential.user);
+export async function registerMember(
+email,
+password,
+ign,
+region = "Unknown"
+){
 
-    window.location.href = "login.html";
+try{
 
-  } catch (error) {
+const userCredential =
+await createUserWithEmailAndPassword(
+auth,
+email,
+password
+);
 
-    alert(error.message);
+const user = userCredential.user;
 
-  }
-};
+await setDoc(
+doc(db,"users",user.uid),
+{
+uid:user.uid,
+email:email,
+ign:ign,
+region:region,
+role:
+email === ADMIN_EMAIL
+? "admin"
+: "member",
 
-/* ==========================
-   LOGIN MEMBER
-========================== */
+banned:false,
 
-window.loginMember = async function (
-  email,
-  password
-) {
-  try {
+createdAt:
+serverTimestamp()
+}
+);
 
-    const userCredential =
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+alert("Account created successfully!");
 
-    alert("Login Successful");
+window.location.href =
+"login.html";
 
-    console.log(userCredential.user);
+}catch(error){
 
-    window.location.href = "member.html";
+alert(error.message);
 
-  } catch (error) {
+}
 
-    alert(error.message);
+}
 
-  }
-};
+/* --------------------------
+   LOGIN
+--------------------------- */
 
-/* ==========================
+export async function loginMember(
+email,
+password
+){
+
+try{
+
+const userCredential =
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+const user =
+userCredential.user;
+
+const userDoc =
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(!userDoc.exists()){
+
+alert("Profile not found");
+
+return;
+
+}
+
+const data =
+userDoc.data();
+
+if(data.banned){
+
+alert("You are banned.");
+
+await signOut(auth);
+
+return;
+
+}
+
+if(data.role === "admin"){
+
+window.location.href =
+"admin.html";
+
+}else{
+
+window.location.href =
+"member.html";
+
+}
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+}
+
+/* --------------------------
    LOGOUT
-========================== */
+--------------------------- */
 
-window.logoutMember = async function () {
+export async function logoutMember(){
 
-  try {
+try{
 
-    await signOut(auth);
+await signOut(auth);
 
-    alert("Logged Out");
+window.location.href =
+"login.html";
 
-    window.location.href = "login.html";
+}catch(error){
 
-  } catch (error) {
+alert(error.message);
 
-    alert(error.message);
+}
 
-  }
+}
 
-};
+/* --------------------------
+   GET CURRENT USER
+--------------------------- */
 
-/* ==========================
-   AUTH CHECK
-========================== */
+export function getCurrentUser(callback){
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(
+auth,
+async(user)=>{
 
-  if (user) {
+if(!user){
 
-    console.log("Logged In:", user.email);
+callback(null);
+return;
 
-  } else {
+}
 
-    console.log("No User Logged In");
+const userDoc =
+await getDoc(
+doc(db,"users",user.uid)
+);
 
-  }
+if(userDoc.exists()){
+
+callback({
+uid:user.uid,
+...userDoc.data()
+});
+
+}else{
+
+callback(null);
+
+}
 
 });
+}
+
+/* --------------------------
+   ADMIN CHECK
+--------------------------- */
+
+export function requireAdmin(){
+
+onAuthStateChanged(
+auth,
+async(user)=>{
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+return;
+
+}
+
+const userDoc =
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+if(!userDoc.exists()){
+
+window.location.href =
+"login.html";
+
+return;
+
+}
+
+const data =
+userDoc.data();
+
+if(data.role !== "admin"){
+
+window.location.href =
+"member.html";
+
+}
+
+});
+}
+
+/* --------------------------
+   MEMBER CHECK
+--------------------------- */
+
+export function requireMember(){
+
+onAuthStateChanged(
+auth,
+(user)=>{
+
+if(!user){
+
+window.location.href =
+"login.html";
+
+}
+
+});
+}
+
+/* --------------------------
+   PROMOTE TO ADMIN
+--------------------------- */
+
+export async function makeAdmin(uid){
+
+try{
+
+await updateDoc(
+doc(db,"users",uid),
+{
+role:"admin"
+}
+);
+
+alert("User promoted to admin");
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+}
+
+/* --------------------------
+   BAN MEMBER
+--------------------------- */
+
+export async function banMember(uid){
+
+try{
+
+await updateDoc(
+doc(db,"users",uid),
+{
+banned:true
+}
+);
+
+alert("Member banned");
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+}
+
+/* --------------------------
+   UNBAN MEMBER
+--------------------------- */
+
+export async function unbanMember(uid){
+
+try{
+
+await updateDoc(
+doc(db,"users",uid),
+{
+banned:false
+}
+);
+
+alert("Member unbanned");
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+}
