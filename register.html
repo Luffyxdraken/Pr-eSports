@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PR eSports - Create Account</title>
+<title>Create Account - PR eSports</title>
 
 <style>
 
 body{
     margin:0;
-    padding:0;
     background:#0f0f0f;
     color:white;
     font-family:Arial,sans-serif;
@@ -19,21 +18,20 @@ body{
     min-height:100vh;
 }
 
-.register-box{
+.box{
     width:350px;
     background:#1b1b1b;
     padding:30px;
     border-radius:15px;
     text-align:center;
-    box-shadow:0 0 15px rgba(255,153,0,0.3);
+    box-shadow:0 0 15px rgba(255,153,0,.3);
 }
 
 h1{
     color:#ff9900;
-    margin-bottom:20px;
 }
 
-input{
+input,select{
     width:100%;
     padding:12px;
     margin:10px 0;
@@ -45,17 +43,16 @@ input{
 button{
     width:100%;
     padding:12px;
-    margin-top:10px;
     background:#ff9900;
     color:white;
     border:none;
     border-radius:8px;
-    font-weight:bold;
     cursor:pointer;
+    font-weight:bold;
 }
 
 button:hover{
-    opacity:0.9;
+    opacity:.9;
 }
 
 a{
@@ -65,10 +62,9 @@ a{
 
 </style>
 </head>
-
 <body>
 
-<div class="register-box">
+<div class="box">
 
 <h1>⚓ Create Account</h1>
 
@@ -77,14 +73,30 @@ a{
 <input
 type="text"
 id="ign"
-placeholder="Enter In-Game Name"
+placeholder="In Game Name"
+required>
+
+<input
+type="email"
+id="email"
+placeholder="Email"
 required>
 
 <input
 type="password"
 id="password"
-placeholder="Create Password"
+placeholder="Password"
 required>
+
+<select id="region">
+
+<option value="India">India</option>
+<option value="Bangladesh">Bangladesh</option>
+<option value="Nepal">Nepal</option>
+<option value="Pakistan">Pakistan</option>
+<option value="Singapore">Singapore</option>
+
+</select>
 
 <button type="submit">
 Create Account
@@ -106,35 +118,36 @@ Already have an account? Login
 
 </div>
 
-<script>
+<script type="module">
 
-document.getElementById("registerForm")
-.addEventListener("submit", function(e){
+import { registerMember }
+from "./auth.js";
+
+document
+.getElementById("registerForm")
+.addEventListener("submit",
+async(e)=>{
 
 e.preventDefault();
 
 const ign =
 document.getElementById("ign").value;
 
+const email =
+document.getElementById("email").value;
+
 const password =
 document.getElementById("password").value;
 
-// Save account locally
+const region =
+document.getElementById("region").value;
 
-localStorage.setItem(
-"memberIGN",
-ign
+await registerMember(
+email,
+password,
+ign,
+region
 );
-
-localStorage.setItem(
-"memberPassword",
-password
-);
-
-// Redirect to login
-
-window.location.href =
-"login.html";
 
 });
 
