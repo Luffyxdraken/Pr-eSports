@@ -8,92 +8,88 @@
 <style>
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:#0f0f0f;
-    color:white;
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f0f0f;
+color:white;
 }
 
 .header{
-    background:#ff9900;
-    padding:20px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
+background:#ff9900;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
 }
 
 .container{
-    max-width:1000px;
-    margin:auto;
-    padding:20px;
+max-width:1000px;
+margin:auto;
+padding:20px;
 }
 
 .card{
-    background:#1b1b1b;
-    padding:20px;
-    border-radius:15px;
-    margin-bottom:20px;
-    box-shadow:0 0 10px rgba(255,153,0,0.2);
-}
-
-h2{
-    color:#ff9900;
+background:#1b1b1b;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
 }
 
 input,
-select,
-textarea{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:8px;
-    box-sizing:border-box;
+textarea,
+select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+box-sizing:border-box;
 }
 
 button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    background:#ff9900;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
+background:#ff9900;
+color:white;
+border:none;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+cursor:pointer;
+width:100%;
 }
 
-button:hover{
-    opacity:0.9;
+h2{
+color:#ff9900;
 }
 
-.player{
-    background:#222;
-    padding:10px;
-    border-radius:8px;
-    margin-top:10px;
-}
-
-.logout{
-    background:red;
+.member{
+background:#222;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
 }
 
 </style>
+
 </head>
 <body>
 
 <div class="header">
-⚓ PR eSports Admin Panel
+👑 PR eSports Admin Panel
 </div>
 
 <div class="container">
 
 <div class="card">
+
 <h2>🏆 Tournament Settings</h2>
 
-<input type="date" id="date">
+<input
+type="date"
+id="date">
 
-<input type="time" id="time">
+<input
+type="time"
+id="time">
 
 <select id="map">
 <option>Bermuda</option>
@@ -110,10 +106,10 @@ placeholder="Room ID">
 
 <input
 type="text"
-id="roompassword"
+id="roompass"
 placeholder="Room Password">
 
-<button onclick="saveTournament()">
+<button id="saveTournament">
 Save Tournament
 </button>
 
@@ -126,26 +122,11 @@ Save Tournament
 <textarea
 id="announcement"
 rows="5"
-placeholder="Write announcement here...">
+placeholder="Write announcement">
 </textarea>
 
-<button onclick="saveAnnouncement()">
+<button id="saveAnnouncement">
 Save Announcement
-</button>
-
-</div>
-
-<div class="card">
-
-<h2>🚫 Ban Player</h2>
-
-<input
-type="text"
-id="banUser"
-placeholder="Enter In Game Name">
-
-<button onclick="banPlayer()">
-Ban Player
 </button>
 
 </div>
@@ -169,7 +150,7 @@ type="text"
 id="rank3"
 placeholder="Rank 3">
 
-<button onclick="saveRankings()">
+<button id="saveRanks">
 Save Rankings
 </button>
 
@@ -177,19 +158,47 @@ Save Rankings
 
 <div class="card">
 
-<h2>📋 Banned Players</h2>
+<h2>🚫 Ban Member</h2>
 
-<div id="bannedList">
-No banned players.
-</div>
+<input
+type="text"
+id="banUid"
+placeholder="User UID">
+
+<button id="banBtn">
+Ban Member
+</button>
 
 </div>
 
 <div class="card">
 
-<button
-class="logout"
-onclick="logoutAdmin()">
+<h2>✅ Unban Member</h2>
+
+<input
+type="text"
+id="unbanUid"
+placeholder="User UID">
+
+<button id="unbanBtn">
+Unban Member
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>📺 YouTube Channel</h2>
+
+<p>
+https://youtube.com/@luffy_69_ff
+</p>
+
+</div>
+
+<div class="card">
+
+<button id="logoutBtn">
 Logout
 </button>
 
@@ -197,29 +206,45 @@ Logout
 
 </div>
 
-<script>
+<script type="module">
 
-// PASSWORD PROTECTION
-
-const password = prompt(
-"Enter Admin Password"
-);
-
-if(password !== "735208"){
-
-alert("Wrong Password");
-
-window.location.href =
-"index.html";
-
+import {
+requireAdmin,
+logoutMember,
+banMember,
+unbanMember
 }
+from "./auth.js";
 
-// SAVE TOURNAMENT
+import {
+db
+}
+from "./firebase-config.js";
 
-function saveTournament(){
+import {
+doc,
+setDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const data = {
+requireAdmin();
 
+document
+.getElementById("logoutBtn")
+.addEventListener("click",()=>{
+
+logoutMember();
+
+});
+
+document
+.getElementById("saveTournament")
+.addEventListener("click",
+async()=>{
+
+await setDoc(
+doc(db,"tournament","current"),
+{
 date:
 document.getElementById("date").value,
 
@@ -232,151 +257,76 @@ document.getElementById("map").value,
 roomid:
 document.getElementById("roomid").value,
 
-roompassword:
-document.getElementById("roompassword").value
-
-};
-
-localStorage.setItem(
-"tournamentData",
-JSON.stringify(data)
+roompass:
+document.getElementById("roompass").value
+}
 );
 
 alert("Tournament Saved");
 
+});
+
+document
+.getElementById("saveAnnouncement")
+.addEventListener("click",
+async()=>{
+
+await setDoc(
+doc(db,"announcements","main"),
+{
+text:
+document.getElementById("announcement").value
 }
-
-// ANNOUNCEMENT
-
-function saveAnnouncement(){
-
-localStorage.setItem(
-"announcement",
-document.getElementById(
-"announcement"
-).value
 );
 
 alert("Announcement Saved");
 
-}
+});
 
-// RANKINGS
+document
+.getElementById("saveRanks")
+.addEventListener("click",
+async()=>{
 
-function saveRankings(){
-
-const rankings = {
-
+await setDoc(
+doc(db,"rankings","main"),
+{
 rank1:
-document.getElementById(
-"rank1"
-).value,
+document.getElementById("rank1").value,
 
 rank2:
-document.getElementById(
-"rank2"
-).value,
+document.getElementById("rank2").value,
 
 rank3:
-document.getElementById(
-"rank3"
-).value
-
-};
-
-localStorage.setItem(
-"rankings",
-JSON.stringify(rankings)
+document.getElementById("rank3").value
+}
 );
 
 alert("Rankings Saved");
 
-}
+});
 
-// BAN PLAYER
+document
+.getElementById("banBtn")
+.addEventListener("click",()=>{
 
-function banPlayer(){
+const uid =
+document.getElementById("banUid").value;
 
-const player =
-document.getElementById(
-"banUser"
-).value;
-
-if(player === ""){
-
-alert("Enter Player Name");
-
-return;
-
-}
-
-let banned =
-JSON.parse(
-localStorage.getItem(
-"bannedPlayers"
-)
-) || [];
-
-banned.push(player);
-
-localStorage.setItem(
-"bannedPlayers",
-JSON.stringify(banned)
-);
-
-loadBannedPlayers();
-
-alert(player + " banned");
-
-}
-
-// LOAD BANNED PLAYERS
-
-function loadBannedPlayers(){
-
-let banned =
-JSON.parse(
-localStorage.getItem(
-"bannedPlayers"
-)
-) || [];
-
-const list =
-document.getElementById(
-"bannedList"
-);
-
-if(banned.length === 0){
-
-list.innerHTML =
-"No banned players.";
-
-return;
-
-}
-
-list.innerHTML = "";
-
-banned.forEach(player=>{
-
-list.innerHTML +=
-
-'<div class="player">'
-+ player +
-'</div>';
+banMember(uid);
 
 });
 
-}
+document
+.getElementById("unbanBtn")
+.addEventListener("click",()=>{
 
-function logoutAdmin(){
+const uid =
+document.getElementById("unbanUid").value;
 
-window.location.href =
-"index.html";
+unbanMember(uid);
 
-}
-
-loadBannedPlayers();
+});
 
 </script>
 
