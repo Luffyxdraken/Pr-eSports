@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Member Dashboard - Luffy 69 FF</title>
+<title>Luffy 69 FF - Member Area</title>
 
 <style>
+
 body{
     margin:0;
+    font-family:Arial,sans-serif;
     background:#0f0f0f;
     color:white;
-    font-family:Arial,sans-serif;
 }
 
 .header{
     background:#ff9900;
-    text-align:center;
     padding:20px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
 }
 
 .container{
@@ -28,19 +31,30 @@ body{
 .card{
     background:#1b1b1b;
     padding:20px;
-    border-radius:12px;
+    border-radius:15px;
     margin-bottom:20px;
 }
 
-.card h2{
+h2{
     color:#ff9900;
 }
 
-.room-box{
-    background:#222;
-    padding:15px;
-    border-radius:10px;
+.info{
+    font-size:18px;
     margin-top:10px;
+}
+
+button{
+    background:#ff9900;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
 }
 
 .rank{
@@ -50,137 +64,195 @@ body{
     margin-top:10px;
 }
 
-.logout{
-    display:inline-block;
-    background:#ff9900;
-    color:white;
-    text-decoration:none;
-    padding:10px 15px;
-    border-radius:8px;
-}
 </style>
 </head>
-
 <body>
 
 <div class="header">
-    <h1>⚓ LUFFY 69 FF MEMBER DASHBOARD</h1>
+⚓ Luffy 69 FF Member Area
 </div>
 
 <div class="container">
 
-    <div class="card">
-        <h2>👋 Welcome Member</h2>
-        <p id="memberName">Loading...</p>
-    </div>
+<div class="card">
+<h2>👋 Welcome</h2>
+<div id="playerName" class="info"></div>
+</div>
 
-    <div class="card">
-        <h2>🏆 Tournament Information</h2>
+<div class="card">
+<h2>⏳ Tournament Countdown</h2>
+<h1 id="countdown">Loading...</h1>
+</div>
 
-        <p><strong>Date:</strong> <span id="date">Loading...</span></p>
+<div class="card">
+<h2>🏆 Tournament Details</h2>
 
-        <p><strong>Time:</strong> <span id="time">Loading...</span></p>
+<div class="info">
+📅 Date: <span id="date">Not Set</span>
+</div>
 
-        <p><strong>Map:</strong> <span id="map">Loading...</span></p>
-    </div>
+<div class="info">
+🕒 Time: <span id="time">Not Set</span>
+</div>
 
-    <div class="card">
-        <h2>🔐 Room Details</h2>
+<div class="info">
+🗺️ Map: <span id="map">Not Set</span>
+</div>
 
-        <div class="room-box">
+<div class="info">
+🎮 Room ID: <span id="roomid">Not Set</span>
+</div>
 
-            <p>
-            <strong>Room ID:</strong>
-            <span id="roomid">Loading...</span>
-            </p>
+<div class="info">
+🔑 Password: <span id="roompassword">Not Set</span>
+</div>
 
-            <p>
-            <strong>Password:</strong>
-            <span id="password">Loading...</span>
-            </p>
+</div>
 
-        </div>
-    </div>
+<div class="card">
+<h2>📢 Announcement</h2>
+<p id="announcement">
+No Announcement Yet
+</p>
+</div>
 
-    <div class="card">
-        <h2>📢 Announcement</h2>
+<div class="card">
+<h2>🏅 Guild Rankings</h2>
 
-        <p id="announcement">
-            Loading...
-        </p>
-    </div>
+<div class="rank">
+🥇 <span id="rank1">Empty</span>
+</div>
 
-    <div class="card">
-        <h2>🏅 Guild Rankings</h2>
+<div class="rank">
+🥈 <span id="rank2">Empty</span>
+</div>
 
-        <div class="rank">
-            🥇 <span id="rank1">Loading...</span>
-        </div>
+<div class="rank">
+🥉 <span id="rank3">Empty</span>
+</div>
 
-        <div class="rank">
-            🥈 <span id="rank2">Loading...</span>
-        </div>
+</div>
 
-        <div class="rank">
-            🥉 <span id="rank3">Loading...</span>
-        </div>
-    </div>
+<div class="card">
+<h2>🎮 Tournament Slots</h2>
+<h3 id="slots">Loading...</h3>
+</div>
 
-    <a href="login.html" class="logout">
-        Logout
-    </a>
+<div class="card">
+<h2>📞 Helpline</h2>
+
+<p>
+Need help?
+Contact Admin:
+</p>
+
+<p>
+Discord: Luffy69FF
+</p>
+
+<p>
+Instagram: @luffy69ff
+</p>
+
+</div>
+
+<div class="card">
+<button onclick="logout()">
+Logout
+</button>
+</div>
 
 </div>
 
 <script>
 
-/*
-Firebase Authentication Check
+// LOGIN CHECK
 
-If member is not logged in:
-redirect to login.html
-*/
+if(localStorage.getItem("loggedIn") !== "true"){
+window.location.href = "login.html";
+}
 
-/*
-Load Tournament Data
-*/
+// PLAYER NAME
+
+document.getElementById(
+"playerName"
+).innerHTML =
+"Welcome, " +
+(localStorage.getItem("memberIGN") || "Player");
+
+// LOAD TOURNAMENT
+
+const tournament =
+JSON.parse(
+localStorage.getItem(
+"tournamentData"
+)
+);
+
+if(tournament){
 
 document.getElementById("date").innerText =
-"25 June 2026";
+tournament.date || "Not Set";
 
 document.getElementById("time").innerText =
-"8:00 PM";
+tournament.time || "Not Set";
 
 document.getElementById("map").innerText =
-"Bermuda";
+tournament.map || "Not Set";
 
 document.getElementById("roomid").innerText =
-"123456789";
+tournament.roomid || "Not Set";
 
-document.getElementById("password").innerText =
-"LUFFY69";
+document.getElementById("roompassword").innerText =
+tournament.roompassword || "Not Set";
 
-/*
-Load Announcement
-*/
+}
 
-document.getElementById("announcement").innerText =
-"Welcome to the weekly guild tournament!";
+// LOAD ANNOUNCEMENT
 
-/*
-Load Rankings
-*/
+document.getElementById(
+"announcement"
+).innerText =
+localStorage.getItem(
+"announcement"
+) || "No Announcement Yet";
+
+// LOAD RANKINGS
+
+const rankings =
+JSON.parse(
+localStorage.getItem(
+"rankings"
+)
+);
+
+if(rankings){
 
 document.getElementById("rank1").innerText =
-"Luffy";
+rankings.rank1 || "Empty";
 
 document.getElementById("rank2").innerText =
-"Player 2";
+rankings.rank2 || "Empty";
 
 document.getElementById("rank3").innerText =
-"Player 3";
+rankings.rank3 || "Empty";
 
-    // COUNTDOWN TIMER
+}
+
+// TOURNAMENT SLOTS
+
+const maxPlayers = 50;
+const joinedPlayers = 12;
+
+document.getElementById(
+"slots"
+).innerHTML =
+joinedPlayers +
+" / " +
+maxPlayers +
+" Players Joined";
+
+// COUNTDOWN
 
 const tournamentDate =
 new Date("2026-07-01T20:00:00").getTime();
@@ -194,92 +266,40 @@ const distance =
 tournamentDate - now;
 
 const days =
-Math.floor(
-distance / (1000*60*60*24)
-);
+Math.floor(distance/(1000*60*60*24));
 
 const hours =
-Math.floor(
-(distance % (1000*60*60*24))
-/
-(1000*60*60)
-);
+Math.floor((distance%(1000*60*60*24))/(1000*60*60));
 
 const minutes =
-Math.floor(
-(distance % (1000*60*60))
-/
-(1000*60)
-);
+Math.floor((distance%(1000*60*60))/(1000*60));
 
 const seconds =
-Math.floor(
-(distance % (1000*60))
-/
-1000
-);
+Math.floor((distance%(1000*60))/1000);
 
 document.getElementById(
 "countdown"
 ).innerHTML =
 
-days + "d " +
-hours + "h " +
-minutes + "m " +
-seconds + "s";
+days+"d "+
+hours+"h "+
+minutes+"m "+
+seconds+"s";
 
 },1000);
 
-            <div class="card">
+// LOGOUT
 
-<h2>🎮 Tournament Slots</h2>
+function logout(){
 
-<h3 id="slots">
-Loading...
-</h3>
+localStorage.removeItem(
+"loggedIn"
+);
 
-</div>
-    
-/*
-Firebase Firestore Code
-will replace all sample data above.
-*/
+window.location.href =
+"login.html";
 
-<script>
-
-/*
-Load Rankings
-*/
-
-document.getElementById("rank1").innerText =
-"Luffy";
-
-document.getElementById("rank2").innerText =
-"Player 2";
-
-document.getElementById("rank3").innerText =
-"Player 3";
-
-
-// TOURNAMENT SLOTS
-
-const maxPlayers = 50;
-const joinedPlayers = 27;
-
-const remaining =
-maxPlayers - joinedPlayers;
-
-document.getElementById(
-"slots"
-).innerHTML =
-
-joinedPlayers +
-" / " +
-maxPlayers +
-" Players Joined<br><br>" +
-
-remaining +
-" Slots Remaining";
+}
 
 </script>
 
