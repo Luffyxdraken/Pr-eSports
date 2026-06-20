@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PR eSports Login</title>
+<title>Member Login - PR eSports</title>
 
 <style>
 
 body{
     margin:0;
-    padding:0;
     background:#0f0f0f;
     color:white;
     font-family:Arial,sans-serif;
@@ -19,18 +18,17 @@ body{
     min-height:100vh;
 }
 
-.login-box{
+.box{
     width:350px;
     background:#1b1b1b;
     padding:30px;
     border-radius:15px;
     text-align:center;
-    box-shadow:0 0 15px rgba(255,153,0,0.3);
+    box-shadow:0 0 15px rgba(255,153,0,.3);
 }
 
 h1{
     color:#ff9900;
-    margin-bottom:20px;
 }
 
 input{
@@ -45,17 +43,16 @@ input{
 button{
     width:100%;
     padding:12px;
-    margin-top:10px;
     background:#ff9900;
     color:white;
     border:none;
     border-radius:8px;
-    font-weight:bold;
     cursor:pointer;
+    font-weight:bold;
 }
 
 button:hover{
-    opacity:0.9;
+    opacity:.9;
 }
 
 a{
@@ -65,25 +62,24 @@ a{
 
 </style>
 </head>
-
 <body>
 
-<div class="login-box">
+<div class="box">
 
-<h1>⚓ PR eSports Login</h1>
+<h1>⚓ Member Login</h1>
 
 <form id="loginForm">
 
 <input
-type="text"
-id="ign"
-placeholder="Enter In-Game Name"
+type="email"
+id="email"
+placeholder="Email"
 required>
 
 <input
 type="password"
 id="password"
-placeholder="Enter Password"
+placeholder="Password"
 required>
 
 <button type="submit">
@@ -106,43 +102,28 @@ Create Account
 
 </div>
 
-<script>
+<script type="module">
 
-document.getElementById("loginForm")
-.addEventListener("submit",function(e){
+import { loginMember }
+from "./auth.js";
+
+document
+.getElementById("loginForm")
+.addEventListener("submit",
+async(e)=>{
 
 e.preventDefault();
 
-const ign =
-document.getElementById("ign").value;
+const email =
+document.getElementById("email").value;
 
 const password =
 document.getElementById("password").value;
 
-const savedIGN =
-localStorage.getItem("memberIGN");
-
-const savedPassword =
-localStorage.getItem("memberPassword");
-
-if(
-ign === savedIGN &&
-password === savedPassword
-){
-
-localStorage.setItem(
-"loggedIn",
-"true"
+await loginMember(
+email,
+password
 );
-
-window.location.href =
-"member.html";
-
-}else{
-
-alert("Wrong IGN or Password");
-
-}
 
 });
 
