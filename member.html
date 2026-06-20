@@ -48,9 +48,28 @@ border-radius:8px;
 cursor:pointer;
 }
 
-a{
-color:white;
-text-decoration:none;
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+box-sizing:border-box;
+}
+
+#chatBox{
+height:300px;
+overflow-y:auto;
+background:#111;
+padding:10px;
+border-radius:10px;
+}
+
+.chat-message{
+background:#222;
+padding:10px;
+border-radius:8px;
+margin-bottom:8px;
 }
 
 </style>
@@ -69,47 +88,20 @@ text-decoration:none;
 </div>
 
 <div class="card">
-<h2>🏆 Tournament Information</h2>
+<h2>🏆 Tournament</h2>
 
-<p>
-📅 Date:
-<span id="tourDate">
-Coming Soon
-</span>
-</p>
-
-<p>
-🕒 Time:
-<span id="tourTime">
-Coming Soon
-</span>
-</p>
-
-<p>
-🗺️ Map:
-<span id="tourMap">
-Coming Soon
-</span>
-</p>
+<p>📅 Date: <span id="tourDate">Coming Soon</span></p>
+<p>🕒 Time: <span id="tourTime">Coming Soon</span></p>
+<p>🗺️ Map: <span id="tourMap">Coming Soon</span></p>
 
 </div>
 
 <div class="card">
 <h2>🔑 Room Information</h2>
 
-<p>
-Room ID:
-<span id="roomId">
-Not Released
-</span>
-</p>
+<p>Room ID: <span id="roomId">Locked</span></p>
 
-<p>
-Password:
-<span id="roomPass">
-Not Released
-</span>
-</p>
+<p>Password: <span id="roomPass">Locked</span></p>
 
 </div>
 
@@ -123,7 +115,8 @@ No Announcement
 </div>
 
 <div class="card">
-<h2>🏅 Top Players</h2>
+
+<h2>🏅 Rankings</h2>
 
 <p id="rank1">🥇 Empty</p>
 <p id="rank2">🥈 Empty</p>
@@ -132,6 +125,28 @@ No Announcement
 </div>
 
 <div class="card">
+
+<h2>💬 Guild Chat</h2>
+
+<div id="chatBox">
+Loading Chat...
+</div>
+
+<input
+type="text"
+id="chatInput"
+placeholder="Type Message">
+
+<br><br>
+
+<button id="sendChat">
+Send Message
+</button>
+
+</div>
+
+<div class="card">
+
 <h2>📺 Official Channel</h2>
 
 <a
@@ -165,16 +180,50 @@ requireMember
 }
 from "./auth.js";
 
+import {
+sendMessage,
+loadChat
+}
+from "./chat.js";
+
 requireMember();
+
+let currentUser = null;
 
 getCurrentUser((user)=>{
 
 if(!user) return;
 
+currentUser = user;
+
 document.getElementById(
 "playerName"
 ).innerText =
-user.ign;
+"Welcome " + user.ign;
+
+});
+
+loadChat("chatBox");
+
+document
+.getElementById("sendChat")
+.addEventListener("click",()=>{
+
+const msg =
+document.getElementById(
+"chatInput"
+).value;
+
+if(!msg || !currentUser) return;
+
+sendMessage(
+currentUser.ign,
+msg
+);
+
+document.getElementById(
+"chatInput"
+).value = "";
 
 });
 
