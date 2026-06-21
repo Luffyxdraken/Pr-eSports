@@ -173,6 +173,45 @@ Logout
 
 <script type="module">
 
+  async function loadTournament(){
+
+try{
+
+const snap = await getDoc(
+doc(db,"tournament","current")
+);
+
+console.log("Tournament Exists:", snap.exists());
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+console.log("Tournament Data:", data);
+
+document.getElementById("tourDate").innerText =
+data.date || "Not Set";
+
+document.getElementById("tourTime").innerText =
+data.time || "Not Set";
+
+document.getElementById("tourMap").innerText =
+data.map || "Not Set";
+
+document.getElementById("roomId").innerText =
+data.roomid || data.roomId || "Not Released";
+
+document.getElementById("roomPass").innerText =
+data.roompass || data.roomPass || data.password || "Not Released";
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+  
 import {
 logoutMember,
 getCurrentUser,
@@ -185,6 +224,17 @@ sendMessage,
 loadChat
 }
 from "./chat.js";
+
+import { db }
+from "./firebase-config.js";
+
+import {
+doc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; 
+   ...
+}
 
 requireMember();
 
@@ -203,6 +253,8 @@ document.getElementById(
 
 });
 
+loadTournament();
+  
 loadChat("chatBox");
 
 document
