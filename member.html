@@ -172,22 +172,6 @@ Logout
 </div>
 
 <script type="module">
-
-  async function loadTournament(){
-
-try{
-
-const snap = await getDoc(
-doc(db,"tournament","current")
-);
-
-console.log("Tournament Exists:", snap.exists());
-
-if(!snap.exists()) return;
-
-const data = snap.data();
-
-}
   
 import {
 logoutMember,
@@ -210,7 +194,7 @@ doc,
 getDoc
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; 
-   ...
+
 async function loadTournament(){
 
 try{
