@@ -206,7 +206,9 @@ doc(db,"tournament","current")
 if(!snap.exists()) return;
 
 const data = snap.data();
-
+console.log(data);
+alert(JSON.stringify(data));
+  
 document.getElementById("tourDate").innerText =
 data.date || "Not Set";
 
