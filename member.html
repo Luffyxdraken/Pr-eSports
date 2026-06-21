@@ -187,29 +187,6 @@ if(!snap.exists()) return;
 
 const data = snap.data();
 
-console.log("Tournament Data:", data);
-
-document.getElementById("tourDate").innerText =
-data.date || "Not Set";
-
-document.getElementById("tourTime").innerText =
-data.time || "Not Set";
-
-document.getElementById("tourMap").innerText =
-data.map || "Not Set";
-
-document.getElementById("roomId").innerText =
-data.roomid || data.roomId || "Not Released";
-
-document.getElementById("roomPass").innerText =
-data.roompass || data.roomPass || data.password || "Not Released";
-
-}catch(error){
-
-console.error(error);
-
-}
-
 }
   
 import {
@@ -234,6 +211,45 @@ getDoc
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"; 
    ...
+async function loadTournament(){
+
+try{
+
+const snap = await getDoc(
+doc(db,"tournament","current")
+);
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+document.getElementById("tourDate").innerText =
+data.date || "Not Set";
+
+document.getElementById("tourTime").innerText =
+data.time || "Not Set";
+
+document.getElementById("tourMap").innerText =
+data.map || "Not Set";
+
+document.getElementById("roomId").innerText =
+data.roomid ||
+data.roomId ||
+data.id ||
+"Locked";
+
+document.getElementById("roomPass").innerText =
+data.roompass ||
+data.roomPass ||
+data.password ||
+"Locked";
+
+}catch(error){
+
+console.error(error);
+
+}
+
 }
 
 requireMember();
@@ -254,6 +270,62 @@ document.getElementById(
 });
 
 loadTournament();
+
+  async function loadAnnouncement(){
+
+try{
+
+const snap = await getDoc(
+doc(db,"announcements","main")
+);
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+document.getElementById("announcement").innerText =
+data.text || "No Announcement";
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+loadAnnouncement();
+
+    async function loadRankings(){
+
+try{
+
+const snap = await getDoc(
+doc(db,"rankings","main")
+);
+
+if(!snap.exists()) return;
+
+const data = snap.data();
+
+document.getElementById("rank1").innerText =
+"🥇 " + (data.rank1 || "Empty");
+
+document.getElementById("rank2").innerText =
+"🥈 " + (data.rank2 || "Empty");
+
+document.getElementById("rank3").innerText =
+"🥉 " + (data.rank3 || "Empty");
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+loadRankings();
   
 loadChat("chatBox");
 
